@@ -1,0 +1,185 @@
+﻿
+
+.select-wrapper {
+    --primary-color: #3f51b5;
+    position: relative;
+    transition: all .3s;
+}
+
+
+.select-wrapper .control {
+    border: none;
+    padding: 15px 1em 0 1em;
+    width: 100%;
+    height: 59px;
+    outline: none;
+}
+
+label {
+    font-size: 1em;
+    color: #aaa;
+    display: block;
+    opacity: 1;
+    transform: translate(.7em,-2.6em);
+    transform-origin: 0 0;
+    transition: all .3s;
+    pointer-events: none
+}
+
+.filled {
+    border-color: #ccc !important;
+    background-color: #f0f0f0;
+    border-style: none none solid none !important;
+    border-width: 1px !important;
+}
+
+.standard {
+    background-color: transparent;
+    border-style: none none solid none !important;
+    border-width: 1px !important;
+    border-color: #ccc;
+}
+
+
+.outline {
+    background-color: transparent;
+    border: solid 1px !important;
+    border-radius: 5px;
+}
+
+
+.control:focus + label,
+.text-control:not(:placeholder-shown) + label,
+.wrapper:focus-within + label,
+.select-control:valid ~ label {
+    transform: translate(1em, -3.65em);
+}
+
+.text-control::placeholder {
+    color: transparent;
+}
+
+.text-control {
+    cursor: pointer;
+    background: inherit;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+    margin-bottom: 10px;
+}
+
+    .grid div {
+        display: flex;
+        position: relative;
+        align-items: flex-end;
+        height: 40px;
+        padding: 0 .5em;
+        border: solid 1px #ccc;
+        border-radius: 5px;
+    }
+
+    .grid span {
+        cursor: pointer;
+        position: absolute;
+        right: 5%;
+        top: 5%;
+    }
+
+.wrapper:focus-within + label {
+    color: var(--primary-color)
+}
+
+.wrapper:focus-within {
+    border-color: var(--primary-color) !important;
+}
+
+    .wrapper:focus-within + label {
+        transform: translate(1em, -4.3em);
+        display: block;
+        z-index: 2;
+        background-color: #fff;
+        width: fit-content;
+        padding: 0 10px
+    }
+
+ul {
+    position: absolute;
+    display: block;
+    top: 10%;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    overflow: auto;
+}
+
+li {
+    cursor: pointer;
+    padding: .5em;
+}
+
+    li:hover {
+        background: #C5CBE9;
+    }
+
+
+.menu {
+    display: block;
+    z-index: 2;
+    position: relative;
+    top: -25%
+}
+
+    .menu #list {
+        max-height: 0;
+        transition: max-height 0.3s ease-out;
+    }
+
+.open #list {
+    max-height: 500px;
+    transition: max-height 0.3s ease-in;
+}
+
+.arrow {
+    display: block;
+    position: absolute;
+    right: 1%;
+    bottom: 40px;
+    transition: all .3s;
+    width: .8em
+}
+
+.open + .arrow {
+    transform: rotate(180deg)
+}
+.invalid .control:focus,
+.invalid .control {
+    border-color: var(--warn-color) !important;
+}
+
+    .invalid .control:focus + label,
+    .invalid .control + label {
+        color: var(--warn-color) !important;
+    }
+
+.error-message {
+    color: var(--warn-color);
+    padding: 0 .5rem;
+    font-size: .75em;
+    position: relative;
+    bottom: 20px;
+    animation: slideIn 350ms ease-in
+}
+
+
+.invalid {
+    outline: none !important;
+}

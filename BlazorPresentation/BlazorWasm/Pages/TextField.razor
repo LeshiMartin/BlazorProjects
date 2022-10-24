@@ -1,0 +1,43 @@
+﻿@page "/"
+
+
+<div class="mb-2">
+	<TextControlComponent AbstractControl="StandardTextcontrol"></TextControlComponent>
+</div>
+
+<div class="mb-2">
+	<TextControlComponent Appereance="Appereances.Outline" AbstractControl="OutlineTextcontrol"></TextControlComponent>
+</div>
+
+<div class="mb-2">
+	<TextControlComponent Appereance="Appereances.Filled" AbstractControl="FilledTextcontrol"></TextControlComponent>
+</div>
+
+<div class="mb-2">
+	<TextControlComponent AbstractControl="DisabledTextControl"></TextControlComponent>
+</div>
+
+<div class="mb-2">
+	<TextControlComponent AbstractControl="WithValidation"></TextControlComponent>
+</div>
+
+
+
+@code {
+	internal TextControl StandardTextcontrol = new TextControl (label: "Standard TextControl");
+	internal TextControl OutlineTextcontrol = new TextControl (label: "Outline TextControl");
+	internal TextControl FilledTextcontrol = new TextControl (label: "Filled TextControl");
+	internal TextControl DisabledTextControl = new TextControl (label: "Disabled TextControl", isDisabled: true);
+	internal TextControl WithValidation = new TextControl (label: "With Validation");
+
+	protected override void OnInitialized ()
+	{
+		WithValidation.AddValidation (x =>
+		{
+			if ( string.IsNullOrEmpty (((TextControl) x).Value) )
+				return new ControlErrors ("", "The value is required");
+
+			return null;
+		});
+	}
+}

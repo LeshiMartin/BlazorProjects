@@ -1,0 +1,84 @@
+﻿@inherits BaseControlComponent
+<div class="select-wrapper @InvalidStr" @onfocusout="()=>{
+		Toggled = false;
+}">
+
+	<input placeholder="@TextControl!.Label"
+				 list="list"
+				 value="@SelectedText"
+				 @onclick="(()=> Toggled =!Toggled)"
+				 @oninput="@OnInputChange"
+				 class="text-control control @AppereanceClass"
+				 id="@Id" />
+	<label for="@Id">@TextControl.Label</label>
+	<div class="menu @ToggledClass">
+		<ul id="list">
+			@foreach ( var item in DisplayItems )
+			{
+				<li @onclick="(() =>OnSelect(item.Value))">
+					@if ( Template != null )
+					{
+						@Template(item)
+					}
+					else
+					{
+						@item.Text
+					}
+				</li>
+			}
+		</ul>
+	</div>
+	<span @onclick="(()=> Toggled =!Toggled)" class="arrow">
+		<ArrowComponent></ArrowComponent>
+	</span>
+</div>
+@code {
+	public string Id { get; } = Guid.NewGuid ().ToString ().Substring (6);
+	[Parameter]
+	public TextControl? TextControl { get; set; }
+	[Parameter]
+	public ICollection<ISelectItem> Items { get; set; } = new HashSet<ISelectItem> ();
+	[Parameter]
+	public RenderFragment<ISelectItem>? Template { get; set; }
+
+	public ICollection<ISelectItem> DisplayItems { get; set; } = new HashSet<ISelectItem> ();
+	public bool Toggled { get; set; } = false;
+	public string ToggledClass => Toggled ? "open" : "";
+
+	public string SelectedText { get; set; } = string.Empty;
+	string InvalidStr { get; set; } = "";
+	protected void OnSelect ( string value )
+	{
+		var obj = Items.FirstOrDefault (x => x.Value == value);
+		if ( obj is null )
+			return;
+		SelectedText = obj.Text;
+		TextControl!.Value = value;
+		Toggled = false;
+		DisplayItems = Items.ToArray ();
+	}
+
+	protected void Validate ()
+	{
+		TextControl!.Validate ();
+	}
+	protected override void OnParametersSet ()
+	{
+		DisplayItems = Items.ToArray ();
+		TextControl!.OnValidation += () =>
+		{
+			InvalidStr = TextControl!.IsValid ? "" : "invalid";
+
+		};
+		TextControl.OnValueChanged += ( s ) => Validate ();
+		base.OnParametersSet ();
+	}
+
+	protected void OnInputChange ( ChangeEventArgs ev )
+	{
+		var value = ev.Value?.ToString ()?.ToLower () ?? string.Empty;
+		DisplayItems = string.IsNullOrEmpty (value)
+		? Items.ToArray ()
+		: Items.Where (x => x.Text.ToLower ().Contains (value)).ToArray ();
+	}
+}

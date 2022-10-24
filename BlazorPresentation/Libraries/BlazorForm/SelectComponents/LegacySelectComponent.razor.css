@@ -1,0 +1,95 @@
+﻿.select-wrapper {
+    --primary-color: #3f51b5;
+    position: relative;
+    transition: all .3s;
+}
+
+.legacy {
+}
+
+.select-wrapper .control {
+    border: none;
+    padding: 15px 1em 0 1em;
+    width: 100%;
+    height: 59px;
+    outline: none;
+}
+
+label {
+    font-size: 1em;
+    color: #aaa;
+    display: block;
+    opacity: 1;
+    transform: translate(.7em,-2.6em);
+    transform-origin: 0 0;
+    transition: all .3s;
+    pointer-events: none
+}
+
+.filled {
+    border-color: #ccc !important;
+    background-color: #f0f0f0;
+    border-style: none none solid none !important;
+    border-width: 1px !important;
+}
+
+.standard {
+    background-color: transparent;
+    border-style: none none solid none !important;
+    border-width: 1px !important;
+    border-color: #ccc;
+}
+
+
+.outline {
+    background-color: transparent;
+    border: solid 1px !important;
+    border-radius: 5px;
+}
+
+
+.control:focus + label,
+.text-control:not(:placeholder-shown) + label,
+.select-control:valid ~ label {
+    transform: translate(1em, -3.65em);
+}
+.control:focus + label {
+    color: var(--primary-color)
+}
+
+.control:focus {
+    border-color: var(--primary-color) !important;
+}
+
+.outline:focus + label {
+    transform: translate(1em, -4.3em);
+    display: block;
+    z-index: 2;
+    background-color: #fff;
+    width: fit-content;
+    padding: 0 10px
+}
+
+.invalid .control:focus,
+.invalid .control {
+    border-color: var(--warn-color) !important;
+}
+
+    .invalid .control:focus + label,
+    .invalid .control + label {
+        color: var(--warn-color) !important;
+    }
+
+.error-message {
+    color: var(--warn-color);
+    padding: 0 .5rem;
+    font-size: .75em;
+    position: relative;
+    bottom: 20px;
+    animation: slideIn 350ms ease-in
+}
+
+
+.invalid{
+    outline:none !important;
+}

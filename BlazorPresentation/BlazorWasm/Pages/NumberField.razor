@@ -1,0 +1,44 @@
+﻿@page "/number-field"
+
+<h3>NumberField</h3>
+
+
+<div class="mb-2">
+	<NumberControlComponent AbstractControl="StandardNumberControl"></NumberControlComponent>
+</div>
+
+<div class="mb-2">
+	<NumberControlComponent Appereance="Appereances.Outline" AbstractControl="OutlineNumberControl"></NumberControlComponent>
+</div>
+
+<div class="mb-2">
+	<NumberControlComponent Appereance="Appereances.Filled" AbstractControl="FilledNumberControl"></NumberControlComponent>
+</div>
+
+<div class="mb-2">
+	<NumberControlComponent AbstractControl="DisabledNumberControl"></NumberControlComponent>
+
+</div>
+<div class="mb-2">
+	<NumberControlComponent AbstractControl="WithValidation"></NumberControlComponent>
+</div>
+
+@code {
+	internal NumberControl StandardNumberControl = new NumberControl (label: "Standard NumberControl");
+	internal NumberControl OutlineNumberControl = new NumberControl (label: "Outline NumberControl");
+	internal NumberControl FilledNumberControl = new NumberControl (label: "Filled NumberControl");
+	internal NumberControl DisabledNumberControl = new NumberControl (label: "Disabled NumberControl", isDisabled: true);
+	internal NumberControl WithValidation = new NumberControl (label: "With Validation");
+
+	protected override void OnInitialized ()
+	{
+		WithValidation.AddValidation (x =>
+		{
+			if ( (((NumberControl) x).Value) == 0 )
+				return new ControlErrors ("", "The value is required");
+
+			return null;
+		});
+	}
+
+}

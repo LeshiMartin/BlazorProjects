@@ -1,0 +1,124 @@
+﻿@inherits BaseControlComponent
+<div class="select-wrapper" @onfocusout="()=>{Toggled = false; }">
+	<div class="wrapper @AppereanceClass">
+		<div class="grid">
+			@foreach ( var item in SelectedItems )
+			{
+				<div>
+					<span @onclick="(()=>OnRemoveItem(item))">X</span>
+					<p>
+						@item
+					</p>
+				</div>
+			}
+		</div>
+		<input placeholder="@TextControl!.Label"
+					 list="list"
+					 @onchange="Validate"
+					 @onclick="(()=> Toggled =!Toggled)"
+					 class="text-control control"
+					 @oninput="@OnInputChange"
+					 id="@Id" />
+	</div>
+	<label for="@Id">@TextControl!.Label</label>
+	<div class="menu @ToggledClass">
+		<ul id="list">
+			@foreach ( var item in DisplayItems )
+			{
+				<li @onclick="(()=>OnSelect(item.Value))">
+					@if ( Template != null )
+					{
+						@Template(item)
+					}
+					else
+					{
+						@item.Text
+					}
+				</li>
+			}
+		</ul>
+	</div>
+	<span @onclick="(()=> Toggled =!Toggled)" class="arrow">
+		<ArrowComponent></ArrowComponent>
+	</span>
+</div>
+@code {
+	public string Id { get; } = Guid.NewGuid ().ToString ().Substring (6);
+	[Parameter]
+	public TextControl? TextControl { get; set; }
+
+	[Parameter]
+	public ICollection<ISelectItem> Items { get; set; } = new HashSet<ISelectItem> ();
+	[Parameter]
+	public RenderFragment<ISelectItem>? Template { get; set; }
+
+	public ICollection<ISelectItem> DisplayItems { get; set; } = new HashSet<ISelectItem> ();
+
+	public ICollection<string> SelectedItems { get; set; } = new HashSet<string> ();
+
+	public bool Toggled { get; set; } = false;
+	public string ToggledClass => Toggled ? "open" : "";
+
+	public string SelectedText { get; set; } = string.Empty;
+
+	string InvalidStr { get; set; } = string.Empty;
+
+	protected void OnSelect ( string value )
+	{
+		var obj = Items.FirstOrDefault (x => x.Value == value);
+		if ( obj is null )
+			return;
+		SelectedText = obj.Text;
+		TextControl!.Value = string.IsNullOrEmpty (TextControl!.Value) ? value : $"{TextControl.Value};{value}";
+		SelectedItems.Add (value);
+		SelectedText = "";
+		SetDisplayItems ();
+	}
+
+	private void SetDisplayItems ()
+	{
+		DisplayItems = Items.Where (x => !SelectedItems.Contains (x.Text) && x.Text != SelectedText).ToArray ();
+
+	}
+	protected void OnRemoveItem ( string value )
+	{
+		if ( TextControl!.Value.StartsWith (value) )
+		{
+			TextControl.Value = TextControl.Value.Replace (value, "");
+			if ( TextControl.Value.StartsWith (";") )
+				TextControl.Value = TextControl.Value.Substring (1);
+		}
+		else
+		{
+			TextControl.Value = TextControl.Value.Replace ($";{value}", "");
+		}
+		SelectedItems.Remove (value);
+		SetDisplayItems ();
+	}
+
+
+
+	protected void Validate ()
+	{
+
+		TextControl!.Validate ();
+	}
+	protected override void OnParametersSet ()
+	{
+		DisplayItems = Items.ToArray ();
+		TextControl!.OnValidation += () =>
+		{
+			InvalidStr = TextControl!.IsValid ? "" : "invalid";
+
+		};
+		base.OnParametersSet ();
+	}
+
+	protected void OnInputChange ( ChangeEventArgs ev )
+	{
+		var value = ev.Value?.ToString ()?.ToLower () ?? string.Empty;
+		DisplayItems = string.IsNullOrEmpty (value)
+		? Items.ToArray ()
+		: Items.Where (x => !SelectedItems.Contains (x.Text) && x.Text.ToLower ().Contains (value)).ToArray ();
+	}
+}

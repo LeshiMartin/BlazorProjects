@@ -1,0 +1,44 @@
+﻿@using FormField.Models
+@using FormField.Models.FormControls
+@if ( FormGroup != null )
+{
+	<form onsubmit="@(()=>OnSubmit())">
+			@foreach ( var item in FormGroup!.Controls )
+			{
+				@Controls!( item )
+			}
+	</form>
+}
+@code {
+	[Parameter]
+	public FormGroup? FormGroup { get; set; }
+
+	[Parameter]
+	public RenderFragment<FormControl>? Controls { get; set; }
+
+	[Parameter]
+	public EventCallback<FormGroup> OnValidSubmit { get; set; }
+
+	[Parameter]
+	public EventCallback<FormGroup> OnInvalidSubmit { get; set; }
+
+	protected override void OnInitialized ()
+	{
+
+		if ( Controls == null )
+			throw new ArgumentException ("FormControls is required");
+		base.OnInitialized ();
+	}
+
+	private void OnSubmit ()
+	{
+		if ( FormGroup != null && FormGroup.IsValid )
+		{
+			OnValidSubmit.InvokeAsync (FormGroup);
+			return;
+		}
+
+		OnInvalidSubmit.InvokeAsync (FormGroup);
+	}
+
+}

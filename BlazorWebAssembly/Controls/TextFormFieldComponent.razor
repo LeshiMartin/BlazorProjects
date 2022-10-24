@@ -1,0 +1,35 @@
+﻿@using FormField.Models.FormControls
+
+<div class="input-container">
+	<input type="text"
+				 class="control outline"
+				 placeholder="@FormControl!.Label"
+				 id="@Id"
+				 disabled="@FormControl!.IsDisabled"
+				 @bind-value:event="oninput"
+				 @bind-value="@FormControl.Value" />
+	<label for="@Id">@FormControl!.Label</label>
+</div>
+@code {
+
+	[Parameter]
+	public FormControl Control { get; set; }
+
+	public TextFormControl? FormControl { get; set; }
+
+	public string Id { get; set; } = Guid.NewGuid ().ToString ().Substring (6);
+
+
+	protected override void OnInitialized ()
+	{
+		if ( Control is null )
+			throw new ArgumentException ("The form control is missing");
+		base.OnInitialized ();
+	}
+
+	override protected void OnParametersSet ()
+	{
+		FormControl = Control as TextFormControl;
+		base.OnParametersSet ();
+	}
+}

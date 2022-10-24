@@ -1,0 +1,31 @@
+﻿@page "/"
+@using FormField.Models
+@using FormField.Models.FormControls
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<FormGroupComponent OnValidSubmit="@ValidSubmit" FormGroup="Fg" Context="Control">
+	<Controls>
+		<TextFormFieldComponent Control="@Control"></TextFormFieldComponent>
+	</Controls>
+</FormGroupComponent>
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+	public FormGroup Fg { get; set; } = new FormGroup ();
+	protected override void OnInitialized ()
+	{
+
+		Fg.Controls.Add (new TextFormControl ("Test") { Label = "Test" });
+		base.OnInitialized ();
+	}
+
+	protected void ValidSubmit ()
+	{
+		Console.WriteLine (Fg.GetValue<object> ());
+	}
+}

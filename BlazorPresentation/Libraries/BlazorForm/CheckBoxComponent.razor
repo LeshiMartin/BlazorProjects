@@ -1,0 +1,51 @@
+﻿@inherits BaseControlComponent
+<label class="checkbox-layout @ColorClass">
+	<span class="inner-container @CheckClass @AnimateClass">
+		<input type="checkbox" class="visually-hidden" @bind-value="BooleanControl!.Value" />
+		<span class="check-box-background">
+			<svg version="1.1"
+					 focusable="false"
+					 viewBox="0 0 24 24"
+					 aria-hidden="true"
+					 class="checkbox-checkmark">
+				<path fill="none"
+							stroke="white" d="M4.1,12.7 9,17.6 20.3,6.3"
+							class="checkbox-checkmark-path">
+				</path>
+			</svg>
+		</span>
+	</span>
+	<span class="checkbox-label">
+		@BooleanControl!.Label
+	</span>
+</label>
+
+@code {
+
+	public BooleanControl? BooleanControl { get; set; }
+
+	protected string CheckClass { get; set; } = string.Empty;
+
+	protected string AnimateClass { get; set; } = string.Empty;
+
+	protected override void OnParametersSet ()
+	{
+		if ( !ControlIsValid() )
+			throw new ArgumentException ("AbstractControl is required");
+		BooleanControl = (AbstractControl ?? FormGroup!.Controls[FormControlName!]) as BooleanControl;
+		base.OnParametersSet ();
+
+		BooleanControl!.OnValueChanged += ( sender ) =>
+		{
+			CheckClass = BooleanControl.Value ? "checked" : string.Empty;
+			AnimateClass = "animate";
+			StateHasChanged ();
+			Task.Delay (TimeSpan.FromMilliseconds (200)).ContinueWith (_ =>
+			{
+				AnimateClass = string.Empty;
+				InvokeAsync (StateHasChanged);
+			});
+
+		};
+	}
+}

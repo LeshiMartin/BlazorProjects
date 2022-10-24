@@ -1,0 +1,33 @@
+﻿@inherits BaseControlComponent
+<div class="select-wrapper" @onfocusout="Validate">
+
+	<select @bind="@TextControl!.Value" class="select-control control @AppereanceClass" required id="@Id">
+		@foreach ( var item in Items )
+		{
+			<option value="@item.Value"
+						disabled="@item.IsDisabled"
+						selected="@item.IsChecked">@item.Text</option>
+		}
+	</select>
+	<label for="@Id">@TextControl!.Label</label>
+</div>
+
+@code {
+	public string Id { get; } = Guid.NewGuid ().ToString ().Substring (6);
+	[Parameter]
+	public ICollection<ISelectItem> Items { get; set; } = new HashSet<ISelectItem> ();
+	[Parameter]
+	public TextControl? TextControl { get; set; }
+
+	string InvalidStr { get; set; } = string.Empty;
+	protected void Validate () => TextControl!.Validate ();
+	protected override void OnParametersSet ()
+	{
+		TextControl!.OnValidation += () =>
+		{
+			InvalidStr = TextControl!.IsValid ? "" : "invalid";
+
+		};
+		base.OnParametersSet ();
+	}
+}

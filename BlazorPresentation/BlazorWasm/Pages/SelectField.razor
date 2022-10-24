@@ -1,0 +1,53 @@
+﻿@page "/select-field"
+
+<h3>SelectField</h3>
+
+
+<div class="mb-2">
+	<SelectControlComponent Items="Items" AbstractControl="StandardControl"></SelectControlComponent>
+</div>
+
+<div class="mb-2">
+	<SelectControlComponent Items="Items" Appereance="Appereances.Outline" AbstractControl="OutlineControl"></SelectControlComponent>
+</div>
+
+<div class="mb-2">
+	<SelectControlComponent Items="Items" Appereance="Appereances.Filled" AbstractControl="FilledControl"></SelectControlComponent>
+</div>
+
+<div class="mb-2">
+	<SelectControlComponent Items="Items" AbstractControl="DisabledControl"></SelectControlComponent>
+
+</div>
+<div class="mb-2">
+	<SelectControlComponent Items="Items" Searchable="true" AbstractControl="WithValidation"></SelectControlComponent>
+</div>
+
+
+@code {
+	internal TextControl StandardControl = new TextControl (label: "Standard TextControl");
+	internal TextControl OutlineControl = new TextControl (label: "Outline TextControl");
+	internal TextControl FilledControl = new TextControl (label: "Filled TextControl");
+	internal TextControl DisabledControl = new TextControl (label: "Disabled TextControl", isDisabled: true);
+	internal TextControl WithValidation = new TextControl (label: "With Validation");
+
+	internal ICollection<ISelectItem> Items = new List<ISelectItem> ()
+	{
+		new TestSelectItem("Item 1","1"),
+		new TestSelectItem("Item 2","2"),
+		new TestSelectItem("Item 3","3"),
+		new TestSelectItem("Item 4","4"),
+	};
+	protected override void OnInitialized ()
+	{
+		WithValidation.AddValidation (x =>
+		{
+			var value = ((TextControl) x).Value;
+			Console.WriteLine (value);
+			if ( string.IsNullOrEmpty (value) )
+				return new ControlErrors ("", "The value is required");
+
+			return null;
+		});
+	}
+}

@@ -1,0 +1,12 @@
+﻿@page "/param/{id:int}"
+
+<h3>ParamComponent</h3>
+
+<p>
+	Current Id is @Id
+</p>
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+}

@@ -1,0 +1,49 @@
+﻿@inherits BaseControlComponent
+<div class="input-container @InvalidClass">
+	<input type="number"
+				 class="control @AppereanceClass"
+				 placeholder="@FormControl!.Label"
+				 id="@Id"
+				 disabled="@FormControl!.IsDisabled"
+				 @onfocusout="OnChange"
+				 @bind-value:event="oninput"
+				 @bind-value="@FormControl.Value" />
+	<label for="@Id">@FormControl!.Label</label>
+	@foreach ( var error in FormControl.Errors )
+	{
+		<div class="error-message">
+			@error.Message
+		</div>
+	}
+</div>
+@code {
+
+
+
+	public NumberControl? FormControl { get; set; }
+
+	public string Id { get; set; } = Guid.NewGuid ().ToString ().Substring (6);
+
+	string InvalidClass { get; set; } = string.Empty;
+
+	void OnChange () => FormControl!.Validate ();
+
+	protected override void OnInitialized ()
+	{
+		if ( !ControlIsValid () )
+			throw new ArgumentException ("The form control is missing");
+		base.OnInitialized ();
+	}
+
+
+	override protected void OnParametersSet ()
+	{
+		FormControl = (AbstractControl ?? FormGroup!.Controls[ FormControlName! ]) as NumberControl;
+		FormControl!.OnValidation += () =>
+		{
+			InvalidClass = FormControl!.IsValid ? "" : "invalid";
+			StateHasChanged ();
+		};
+		base.OnParametersSet ();
+	}
+}

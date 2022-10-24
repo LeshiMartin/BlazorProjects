@@ -1,0 +1,72 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">BlazorWasm</a>
+		<button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+	<nav class="flex-column">
+
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+				Text Field
+			</NavLink>
+			<NavLink class="nav-link" href="/number-field" Match="NavLinkMatch.All">
+				Number Field
+			</NavLink>
+			<NavLink class="nav-link" href="/select-field" Match="NavLinkMatch.All">
+				Select Field
+			</NavLink>
+			<NavLink class="nav-link" href="/checkbox-field" Match="NavLinkMatch.All">
+				Checkbox Field
+			</NavLink>
+			<NavLink class="nav-link" href="/radio-field" Match="NavLinkMatch.All">
+				Radio Field
+			</NavLink>
+			<NavLink class="nav-link" href="/datetime-field" Match="NavLinkMatch.All">
+				DateTime Field
+			</NavLink>
+			<NavLink class="nav-link" href="/dateonly-field" Match="NavLinkMatch.All">
+				DateOnly Field
+			</NavLink>
+			<NavLink class="nav-link" href="/timeonly-field" Match="NavLinkMatch.All">
+				TimeOnly Field
+			</NavLink>
+			<NavLink class="nav-link" href="/form-field" Match="NavLinkMatch.All">
+				Form Field
+			</NavLink>
+			<NavLink class="nav-link" href="/control-models" Match="NavLinkMatch.All">
+				Control Model
+			</NavLink>
+		</div>
+		@* <div class="nav-item px-3">
+		<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+		<span class="oi oi-home" aria-hidden="true"></span> Home
+		</NavLink>
+		</div>
+		<div class="nav-item px-3">
+		<NavLink class="nav-link" href="counter">
+		<span class="oi oi-plus" aria-hidden="true"></span> Counter
+		</NavLink>
+		</div>
+		<div class="nav-item px-3">
+		<NavLink class="nav-link" href="fetchdata">
+		<span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+		</NavLink>
+		</div>*@
+	</nav>
+</div>
+
+@code {
+	private bool collapseNavMenu = true;
+
+	private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+	private void ToggleNavMenu ()
+	{
+		collapseNavMenu = !collapseNavMenu;
+	}
+}

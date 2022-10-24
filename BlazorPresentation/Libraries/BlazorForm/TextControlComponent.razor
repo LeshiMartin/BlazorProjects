@@ -1,0 +1,47 @@
+﻿@inherits BaseControlComponent
+@inject IJSRuntime JsRuntime
+
+
+<div class="input-container @ValidStr">
+	<input type="text"
+				 class="control @AppereanceClass"
+				 placeholder="@FormControl!.Label"
+				 id="@Id"
+				 disabled="@FormControl!.IsDisabled"
+				 @onfocusout="OnValueChange"
+				 @bind-value:event="oninput"
+				 @bind-value="@FormControl.Value" />
+	<label for="@Id">
+		@FormControl!.Label
+		
+	</label>
+	@foreach ( var error in FormControl.Errors )
+	{
+		<div class="error-message">
+			<span>@error.Message</span>
+		</div>
+	}
+</div>
+@code {
+	public TextControl? FormControl { get; set; }
+	public string Id { get; set; } = Guid.NewGuid ().ToString ().Substring (6);
+	public string ValidStr { get; set; } = string.Empty;
+	protected override void OnInitialized ()
+	{
+		if ( !ControlIsValid () )
+			throw new ArgumentException ("The form control is missing");
+		base.OnInitialized ();
+
+	}
+	void OnValueChange () => FormControl!.Validate ();
+	protected override void OnParametersSet ()
+	{
+		FormControl = (AbstractControl ?? FormGroup!.Controls[ FormControlName! ]) as TextControl;
+		FormControl!.OnValidation += () =>
+		{
+			ValidStr = FormControl.IsValid ? string.Empty : "invalid";
+			StateHasChanged ();
+		};
+		base.OnParametersSet ();
+	}
+}

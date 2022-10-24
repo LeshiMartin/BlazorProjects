@@ -1,0 +1,110 @@
+﻿.input-container {
+    margin-bottom: 1em;
+    transition: all .3s
+}
+
+.invalid {
+    outline: none !important;
+}
+
+label {
+    font-size: 1em;
+    color: #aaa;
+    display: block;
+    opacity: 1;
+    transform: translate(.7em,-2.6em);
+    transform-origin: 0 0;
+    transition: all .3s;
+}
+
+.control {
+    box-shadow: none;
+    border-radius: 0;
+    width: 100%;
+    transition: all .5s;
+    padding: 25px 15px 0 15px;
+    line-height: 10;
+    height: 59px;
+}
+
+.filled {
+    border-color: #ccc;
+    background-color: #f0f0f0;
+    border-style: none none solid none;
+}
+
+.standard {
+    background-color: transparent;
+    border-style: none none solid none;
+}
+
+.outline {
+    background-color: #fff;
+    border-color: #ccc;
+    border: solid 1px #ccc;
+    border-radius: 5px
+}
+
+.control::placeholder {
+    color: transparent;
+}
+
+.control:focus {
+    box-shadow: none;
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+
+    .control:focus + label,
+    .control:not(:placeholder-shown) + label {
+        transform: translate(1em, -3.65em);
+    }
+
+.outline:focus + label {
+    transform: translate(1em, -4.3em);
+    display: block;
+    z-index: 2;
+    background-color: #fff;
+    width: fit-content;
+    padding: 0 10px
+}
+
+.control:focus + label {
+    color: var(--primary-color);
+}
+
+.input-container:focus-within {
+    transform: scale(1.01,1.01);
+}
+
+.invalid .control:focus,
+.invalid .control {
+    border-color: var(--warn-color) !important;
+}
+
+    .invalid .control:focus + label,
+    .invalid .control + label {
+        color: var(--warn-color) !important;
+    }
+
+.error-message {
+    color: var(--warn-color);
+    padding: 0 .5rem;
+    font-size: .75em;
+    position: relative;
+    bottom: 20px;
+    animation: slideIn 350ms ease-in
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

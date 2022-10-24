@@ -1,0 +1,58 @@
+﻿@inherits BaseControlComponent
+
+<div class="@ColorClass">
+	<label>@TextControl!.Label</label>
+	<div class="@OrientationClass">
+		@foreach ( var item in Items )
+		{
+			<label class=" radio-container @(item.Value==TextControl!.Value?"checked":"")">
+				<span class="frame">
+					<span class="inner-circle @AnimateClass"></span>
+				</span>
+				<input type="checkbox"
+						 @onchange="(()=>ValueChangeAsync(item.Value))"
+						 value="@item.Value"
+						 name="@Name"
+						 class="visually-hidden " />
+				<span>
+					@item.Text
+				</span>
+			</label>
+		}
+	</div>
+</div>
+
+
+@code {
+
+	[Parameter]
+	public ICollection<ISelectItem> Items { get; set; } = new HashSet<ISelectItem> ();
+
+	[Parameter]
+	public Orientation Orientation { get; set; } = Orientation.Horizontal;
+
+	internal string OrientationClass => Orientation.ToString ().ToLower ();
+
+	internal TextControl? TextControl { get; set; }
+	internal string Name { get; set; } = Guid.NewGuid ().ToString ().AsSpan ().Slice (0, 6).ToString ();
+	internal string AnimateClass { get; set; } = string.Empty;
+
+	protected override void OnParametersSet ()
+	{
+
+		if ( !ControlIsValid())
+			throw new ArgumentException ("The form control is missing");
+
+		TextControl = (AbstractControl ?? FormGroup!.Controls[FormControlName!]) as TextControl;
+	}
+
+	internal async Task ValueChangeAsync ( string value )
+	{
+		TextControl!.Value = value;
+		AnimateClass = "animate";
+		await Task.Delay (TimeSpan.FromMilliseconds (200));
+		AnimateClass = string.Empty;
+	}
+}
+
+
